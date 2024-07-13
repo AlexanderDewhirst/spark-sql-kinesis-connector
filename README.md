@@ -16,7 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 {% endcomment %}
 -->
-# Apache Bahir
+# Updates
+
+Update `sql-streaming-sqs` package to successfully compile. The resulting JAR file can be obtained with the following steps:
+1. `cd sql-streaming-sqs`
+2. `mvn package`
+3. Obtain the JAR file in `target/spark-sql-streaming-sqs_2.12-3.0.0-SNAPSHOT.jar`
+
+# Source
+## Apache Bahir
 
 Apache Bahir provides extensions to distributed analytics platforms such as Apache Spark & Apache Flink.
 
