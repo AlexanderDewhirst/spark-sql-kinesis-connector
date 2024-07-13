@@ -99,7 +99,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.version>3.5.0</maven.version>
-    <scala.version>2.12.7</scala.version>
+    <scala.version>2.12.19</scala.version>
     <scala.binary.version>2.12</scala.binary.version>
 
     <slf4j.version>1.7.16</slf4j.version>
@@ -511,7 +511,7 @@
           <groupId>net.alchim31.maven</groupId>
           <artifactId>scala-maven-plugin</artifactId>
           <!-- 3.3.1 won't work with zinc; fails to find javac from java.home -->
-          <version>3.2.2</version>
+          <version>4.9.2</version>
           <executions>
             <execution>
               <id>eclipse-add-source</id>
@@ -1113,7 +1113,7 @@
         <property><name>!scala-2.11</name></property>
       </activation>
       <properties>
-        <scala.version>2.12.7</scala.version>
+        <scala.version>2.12.19</scala.version>
         <scala.binary.version>2.12</scala.binary.version>
       </properties>
       <build>
