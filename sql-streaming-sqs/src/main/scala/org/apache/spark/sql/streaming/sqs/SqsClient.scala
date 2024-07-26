@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit
 import scala.collection.JavaConverters._
 
 import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfiguration}
+import com.amazonaws.auth.WebIdentityTokenCredentialsProvider
 import com.amazonaws.services.sqs.{AmazonSQS, AmazonSQSClientBuilder}
 import com.amazonaws.services.sqs.model.{DeleteMessageBatchRequestEntry, Message, ReceiveMessageRequest}
 import org.apache.hadoop.conf.Configuration
@@ -217,31 +218,39 @@ class SqsClient(sourceOptions: SqsSourceOptions,
 
   private def createSqsClient(): AmazonSQS = {
     try {
-      val isClusterOnEc2Role = hadoopConf.getBoolean(
-        "fs.s3.isClusterOnEc2Role", false) || hadoopConf.getBoolean(
-        "fs.s3n.isClusterOnEc2Role", false) || sourceOptions.useInstanceProfileCredentials
-      if (!isClusterOnEc2Role) {
-        val accessKey = hadoopConf.getTrimmed("fs.s3n.awsAccessKeyId")
-        val secretAccessKey = new String(hadoopConf.getPassword("fs.s3n.awsSecretAccessKey")).trim
-        logInfo("Using credentials from keys provided")
-        val basicAwsCredentialsProvider = new BasicAWSCredentialsProvider(
-          accessKey, secretAccessKey)
-        AmazonSQSClientBuilder
-          .standard()
-          .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
-          .withCredentials(basicAwsCredentialsProvider)
-          .withRegion(region)
-          .build()
-      } else {
-        logInfo("Using the credentials attached to the instance")
-        val instanceProfileCredentialsProvider = new InstanceProfileCredentialsProviderWithRetries()
-        AmazonSQSClientBuilder
-          .standard()
-          .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
-          .withCredentials(instanceProfileCredentialsProvider)
-          .withRegion(region)
-          .build()
-      }
+      // Hardcode support for using WebIdentityTokenCredentialsProvider
+      AmazonSQSClientBuilder
+        .standard()
+        .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
+        .withCredentials(WebIdentityTokenCredentialsProvider.create())
+        .withRegion(region)
+        .build()
+
+      // val isClusterOnEc2Role = hadoopConf.getBoolean(
+      //   "fs.s3.isClusterOnEc2Role", false) || hadoopConf.getBoolean(
+      //   "fs.s3n.isClusterOnEc2Role", false) || sourceOptions.useInstanceProfileCredentials
+      // if (!isClusterOnEc2Role) {
+      //   val accessKey = hadoopConf.getTrimmed("fs.s3n.awsAccessKeyId")
+      //   val secretAccessKey = new String(hadoopConf.getPassword("fs.s3n.awsSecretAccessKey")).trim
+      //   logInfo("Using credentials from keys provided")
+      //   val basicAwsCredentialsProvider = new BasicAWSCredentialsProvider(
+      //     accessKey, secretAccessKey)
+      //   AmazonSQSClientBuilder
+      //     .standard()
+      //     .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
+      //     .withCredentials(basicAwsCredentialsProvider)
+      //     .withRegion(region)
+      //     .build()
+      // } else {
+      //   logInfo("Using the credentials attached to the instance")
+      //   val instanceProfileCredentialsProvider = new InstanceProfileCredentialsProviderWithRetries()
+      //   AmazonSQSClientBuilder
+      //     .standard()
+      //     .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
+      //     .withCredentials(instanceProfileCredentialsProvider)
+      //     .withRegion(region)
+      //     .build()
+      // }
     } catch {
       case e: Exception =>
         throw new SparkException(s"Error occured while creating Amazon SQS Client", e)

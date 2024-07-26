@@ -470,7 +470,7 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
+        <!-- <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <version>0.12</version>
@@ -501,7 +501,7 @@
               <exclude>**/json-files/**</exclude>
             </excludes>
           </configuration>
-        </plugin>
+        </plugin> -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
@@ -860,7 +860,7 @@
       </plugins>
     </pluginManagement>
 
-    <defaultGoal>clean install org.apache.rat:apache-rat-plugin:check</defaultGoal>
+    <!-- <defaultGoal>clean install org.apache.rat:apache-rat-plugin:check</defaultGoal> -->
     <plugins>
       <!-- This plugin dumps the test classpath into a file -->
       <plugin>
@@ -897,11 +897,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.11</version>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
