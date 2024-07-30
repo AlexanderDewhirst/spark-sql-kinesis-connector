@@ -327,12 +327,6 @@
       </dependency>
 
       <dependency>
-        <groupId>org.json4s</groupId>
-        <artifactId>json4s-jackson_${scala.binary.version}</artifactId>
-        <version>4.0.7</version>
-      </dependency>
-
-      <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>${jsr305.version}</version>
