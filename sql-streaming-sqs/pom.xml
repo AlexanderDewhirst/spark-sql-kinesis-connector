@@ -69,7 +69,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-sqs</artifactId>
-      <version>1.11.271</version>
+      <version>1.12.765</version>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
@@ -114,7 +114,7 @@
             </execution>
           </executions>
         </plugin>
-      </plugins>        
+      </plugins>
     </pluginManagement>
     <outputDirectory>target/scala-${scala.binary.version}/classes</outputDirectory>
     <testOutputDirectory>target/scala-${scala.binary.version}/test-classes</testOutputDirectory>
