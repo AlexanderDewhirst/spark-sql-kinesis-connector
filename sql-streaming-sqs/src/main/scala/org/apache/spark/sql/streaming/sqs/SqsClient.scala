@@ -164,7 +164,7 @@ class SqsClient(sourceOptions: SqsSourceOptions,
         if (eventName.contains("ObjectCreated")) {
           val timestamp = (messageJson \ "Records" \ "eventTime").extract[Array[String]].head
           val timestampMills = convertTimestampToMills(timestamp)
-          val path = "s3://" +
+          val path = "s3a://" +
             bucketName + "/" +
             (messageJson \ "Records" \ "s3" \ "object" \ "key").extract[Array[String]].head
           logDebug("Successfully parsed sqs message")
