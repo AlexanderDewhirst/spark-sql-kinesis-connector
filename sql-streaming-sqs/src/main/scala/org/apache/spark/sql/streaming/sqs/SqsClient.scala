@@ -27,7 +27,7 @@ import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfi
 import com.amazonaws.services.sqs.{AmazonSQS, AmazonSQSClientBuilder}
 import com.amazonaws.services.sqs.model.{DeleteMessageBatchRequestEntry, Message, ReceiveMessageRequest}
 import org.apache.hadoop.conf.Configuration
-import org.json4s.{DefaultFormats, MappingException}
+import org.json4s.{DefaultFormats}
 import org.json4s.JsonAST.{JNothing, JValue}
 import org.json4s.jackson.JsonMethods.parse
 
@@ -134,7 +134,7 @@ class SqsClient(sourceOptions: SqsSourceOptions,
   private def tryToParseSNS(parsedBody: JValue): JValue = {
     implicit val formats = DefaultFormats
     parsedBody \ "Message" match {
-      case JNothing => throw new MappingException("Original message does not look like SNS one. " +
+      case JNothing => throw new Exception("Original message does not look like SNS one. " +
         "Please check your setup and make sure it is S3 notification event coming from SNS")
       case value => parse(value.extract[String])
     }
@@ -182,10 +182,6 @@ class SqsClient(sourceOptions: SqsSourceOptions,
           list
         }
       } catch {
-        case me: MappingException =>
-          errorMessages.append(message.getReceiptHandle)
-          logWarning(s"Error in parsing SQS message ${me.getMessage}")
-          list
         case e: Exception =>
           errorMessages.append(message.getReceiptHandle)
           logWarning(s"Unexpected error while parsing SQS message ${e.getMessage}")
