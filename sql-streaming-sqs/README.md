@@ -60,6 +60,7 @@ sqsMaxRetries|10|Maximum number of consecutive retries in case of a connection f
 ignoreFileDeletion|false|whether to ignore any File deleted message in SQS queue
 fileNameOnly|false|Whether to check new files based on only the filename instead of on the full path
 shouldSortFiles|true|whether to sort files based on timestamp while listing them from SQS
+shouldAcknowledgeMessages|true|whether to acknowledge messages in the SQS queue.
 useInstanceProfileCredentials|false|Whether to use EC2 instance profile credentials for connecting to Amazon SQS
 maxFilesPerTrigger|no default value|maximum number of files to process in a microbatch
 maxFileAge|7d|Maximum age of a file that can be found in this directory

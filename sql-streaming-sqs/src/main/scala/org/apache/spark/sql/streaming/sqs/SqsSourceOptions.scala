@@ -124,6 +124,8 @@ class SqsSourceOptions(parameters: CaseInsensitiveMap[String]) extends Logging {
 
   val shouldSortFiles: Boolean = withBooleanParameter("shouldSortFiles", true)
 
+  var shouldAcknowledgeMessages: Boolean = withBooleanParameter("shouldAcknowledgeMessages", true)
+
   val useInstanceProfileCredentials: Boolean = withBooleanParameter(
     "useInstanceProfileCredentials", false)
 

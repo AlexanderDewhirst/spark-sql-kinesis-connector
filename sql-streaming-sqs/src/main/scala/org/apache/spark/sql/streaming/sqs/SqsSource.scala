@@ -50,6 +50,8 @@ class SqsSource(sparkSession: SparkSession,
 
   private val shouldSortFiles = sourceOptions.shouldSortFiles
 
+  private val shouldAcknowledgeMessages = sourceOptions.shouldAcknowledgeMessages
+
   private val sqsClient = new SqsClient(sourceOptions, hadoopConf)
 
   metadataLog.allFiles().foreach { entry =>
@@ -90,7 +92,7 @@ class SqsSource(sparkSession: SparkSession,
      */
     val batchFiles = sqsClient.sqsFileCache.getUncommittedFiles(maxFilesPerTrigger, shouldSortFiles)
 
-    if (batchFiles.nonEmpty) {
+    if (batchFiles.nonEmpty && shouldAcknowledgeMessages) {
       metadataLogCurrentOffset += 1
       metadataLog.add(metadataLogCurrentOffset, batchFiles.map {
         case (path, timestamp, receiptHandle) =>
