@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit
 import scala.collection.JavaConverters._
 
 import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfiguration}
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain
 import com.amazonaws.auth.WebIdentityTokenCredentialsProvider
 import com.amazonaws.services.sqs.{AmazonSQS, AmazonSQSClientBuilder}
 import com.amazonaws.services.sqs.model.{DeleteMessageBatchRequestEntry, Message, ReceiveMessageRequest}
@@ -214,13 +215,23 @@ class SqsClient(sourceOptions: SqsSourceOptions,
 
   private def createSqsClient(): AmazonSQS = {
     try {
-      // Hardcode support for using WebIdentityTokenCredentialsProvider
-      AmazonSQSClientBuilder
-        .standard()
-        .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
-        .withCredentials(WebIdentityTokenCredentialsProvider.create())
-        .withRegion(region)
-        .build()
+      if (sys.env.get("APP_ENV").contains("test")) {
+        // Attempt to use default credentials provider in test environments (e.g. localstack).
+        AmazonSQSClientBuilder
+          .standard()
+          .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
+          .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+          .withRegion(region)
+          .build()
+      } else {
+        // Hardcode use of WebIdentityTokenCredentialsProvider in production.
+        AmazonSQSClientBuilder
+          .standard()
+          .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
+          .withCredentials(WebIdentityTokenCredentialsProvider.create())
+          .withRegion(region)
+          .build()
+      }
 
       // val isClusterOnEc2Role = hadoopConf.getBoolean(
       //   "fs.s3.isClusterOnEc2Role", false) || hadoopConf.getBoolean(
