@@ -47,23 +47,23 @@ This library is compiled for Scala 2.12 only, and intends to support Spark 2.4.0
 ## Configuration options
 The configuration is obtained from parameters.
 
-Name |Default | Meaning
---- |:---:| ---
-sqsUrl|required, no default value|sqs queue url, like 'https://sqs.us-east-1.amazonaws.com/330183209093/TestQueue'
-region|required, no default value|AWS region where queue is created
-fileFormat|required, no default value|file format for the s3 files stored on Amazon S3
-schema|required, no default value|schema of the data being read
-sqsFetchIntervalSeconds|10|time interval (in seconds) after which to fetch messages from Amazon SQS queue
-sqsLongPollingWaitTimeSeconds|20|wait time (in seconds) for long polling on Amazon SQS queue
-sqsMaxConnections|1|number of parallel threads to connect to Amazon SQS queue
-sqsMaxRetries|10|Maximum number of consecutive retries in case of a connection failure to SQS before giving up
-ignoreFileDeletion|false|whether to ignore any File deleted message in SQS queue
-fileNameOnly|false|Whether to check new files based on only the filename instead of on the full path
-shouldSortFiles|true|whether to sort files based on timestamp while listing them from SQS
-useInstanceProfileCredentials|false|Whether to use EC2 instance profile credentials for connecting to Amazon SQS
-maxFilesPerTrigger|no default value|maximum number of files to process in a microbatch
-maxFileAge|7d|Maximum age of a file that can be found in this directory
-messageWrapper|None| - 'None' if SQS contains plain S3 message. <br/> - 'SNS' if SQS contains S3 notification message which came from SNS. <br/> Please see 'Use multiple consumers' section for more details 
+Name |          Default           | Meaning
+--- |:--------------------------:| ---
+sqsUrl| required, no default value |sqs queue url, like 'https://sqs.us-east-1.amazonaws.com/330183209093/TestQueue'
+region| required, no default value |AWS region where queue is created
+fileFormat| required, no default value |file format for the s3 files stored on Amazon S3
+schema| required, no default value |schema of the data being read
+sqsFetchIntervalMilliseconds|            1000            |time interval (in milliseconds) after which to fetch messages from Amazon SQS queue
+sqsLongPollingWaitTimeSeconds|             20             |wait time (in seconds) for long polling on Amazon SQS queue
+sqsMaxConnections|             1              |number of parallel threads to connect to Amazon SQS queue
+sqsMaxRetries|             10             |Maximum number of consecutive retries in case of a connection failure to SQS before giving up
+ignoreFileDeletion|           false            |whether to ignore any File deleted message in SQS queue
+fileNameOnly|           false            |Whether to check new files based on only the filename instead of on the full path
+shouldSortFiles|            true            |whether to sort files based on timestamp while listing them from SQS
+useInstanceProfileCredentials|           false            |Whether to use EC2 instance profile credentials for connecting to Amazon SQS
+maxFilesPerTrigger|      no default value      |maximum number of files to process in a microbatch
+maxFileAge|             7d             |Maximum age of a file that can be found in this directory
+messageWrapper|            None            | - 'None' if SQS contains plain S3 message. <br/> - 'SNS' if SQS contains S3 notification message which came from SNS. <br/> Please see 'Use multiple consumers' section for more details 
 
 ## Use multiple consumers
 
@@ -86,7 +86,7 @@ An example to create a SQL stream which uses Amazon SQS to list files on S3,
                           .schema(schema)
                           .option("sqsUrl", queueUrl)
                           .option("fileFormat", "json")
-                          .option("sqsFetchIntervalSeconds", "2")
+                          .option("sqsFetchIntervalMilliseconds", "2000")
                           .option("sqsLongPollingWaitTimeSeconds", "5")
                           .option("useInstanceProfileCredentials", "true")
                           .load()

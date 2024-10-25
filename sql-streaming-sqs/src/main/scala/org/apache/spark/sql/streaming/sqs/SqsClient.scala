@@ -209,7 +209,7 @@ class SqsClient(sourceOptions: SqsSourceOptions,
         s"${sqsMaxRetries} times Giving up. Check logs for details."))
     } else {
       logWarning(s"Attempt ${retriesOnFailure}." +
-        s"Will reattempt after ${sqsFetchIntervalSeconds} seconds")
+        s"Will reattempt after ${sqsFetchIntervalMilliseconds} ms")
     }
   }
 
