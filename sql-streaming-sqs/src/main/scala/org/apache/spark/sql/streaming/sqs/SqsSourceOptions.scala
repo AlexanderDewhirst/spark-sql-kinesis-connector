@@ -63,7 +63,7 @@ class SqsSourceOptions(parameters: CaseInsensitiveMap[String]) extends Logging {
   val fetchIntervalMilliseconds: Int = parameters.get("sqsFetchIntervalMillieconds").map { str =>
     Try(str.toInt).toOption.filter(_ > 0).getOrElse {
       throw new IllegalArgumentException(
-        s"Invalid value '$str' for option 'sqsFetchIntervalMillieconds', must be a positive integer")
+        s"Invalid value '$str' for option 'sqsFetchIntervalMilliseconds', must be a positive integer")
     }
   }.getOrElse(1000)
 
