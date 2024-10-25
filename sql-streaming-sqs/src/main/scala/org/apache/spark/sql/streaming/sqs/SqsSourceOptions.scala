@@ -60,7 +60,7 @@ class SqsSourceOptions(parameters: CaseInsensitiveMap[String]) extends Logging {
   val maxFileAgeMs: Long =
     Utils.timeStringAsMs(parameters.getOrElse("maxFileAge", "7d"))
 
-  val fetchIntervalMilliseconds: Int = parameters.get("sqsFetchIntervalMillieconds").map { str =>
+  val fetchIntervalMilliseconds: Int = parameters.get("sqsFetchIntervalMilliseconds").map { str =>
     Try(str.toInt).toOption.filter(_ > 0).getOrElse {
       throw new IllegalArgumentException(
         s"Invalid value '$str' for option 'sqsFetchIntervalMilliseconds', must be a positive integer")
