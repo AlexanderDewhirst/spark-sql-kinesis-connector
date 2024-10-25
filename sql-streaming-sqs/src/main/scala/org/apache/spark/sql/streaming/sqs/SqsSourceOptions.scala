@@ -60,12 +60,12 @@ class SqsSourceOptions(parameters: CaseInsensitiveMap[String]) extends Logging {
   val maxFileAgeMs: Long =
     Utils.timeStringAsMs(parameters.getOrElse("maxFileAge", "7d"))
 
-  val fetchIntervalSeconds: Int = parameters.get("sqsFetchIntervalSeconds").map { str =>
+  val fetchIntervalMilliseconds: Int = parameters.get("sqsFetchIntervalMillieconds").map { str =>
     Try(str.toInt).toOption.filter(_ > 0).getOrElse {
       throw new IllegalArgumentException(
-        s"Invalid value '$str' for option 'sqsFetchIntervalSeconds', must be a positive integer")
+        s"Invalid value '$str' for option 'sqsFetchIntervalMillieconds', must be a positive integer")
     }
-  }.getOrElse(10)
+  }.getOrElse(1000)
 
   val longPollWaitTimeSeconds: Int = parameters.get("sqsLongPollingWaitTimeSeconds").map { str =>
     Try(str.toInt).toOption.filter(x => x >= 0 && x <= 20).getOrElse {
