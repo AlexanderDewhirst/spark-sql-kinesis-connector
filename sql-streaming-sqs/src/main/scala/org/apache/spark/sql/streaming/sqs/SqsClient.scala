@@ -27,6 +27,7 @@ import com.amazonaws.{AmazonClientException, AmazonServiceException, ClientConfi
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain
 import com.amazonaws.auth.WebIdentityTokenCredentialsProvider
 import com.amazonaws.services.sqs.{AmazonSQS, AmazonSQSClientBuilder}
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.sqs.model.{DeleteMessageBatchRequestEntry, Message, ReceiveMessageRequest}
 import org.apache.hadoop.conf.Configuration
 import org.json4s.{DefaultFormats}
@@ -45,7 +46,12 @@ class SqsClient(sourceOptions: SqsSourceOptions,
   private val sqsMaxRetries = sourceOptions.maxRetries
   private val maxConnections = sourceOptions.maxConnections
   private val ignoreFileDeletion = sourceOptions.ignoreFileDeletion
+  private val endpointUrl = sourceOptions.endpointUrl
   private val region = sourceOptions.region
+  private val endpointConfiguration = new EndpointConfiguration(
+    endpointUrl,
+    region
+  )
   val sqsUrl = sourceOptions.sqsUrl
 
   @volatile var exception: Option[Exception] = None
@@ -221,7 +227,7 @@ class SqsClient(sourceOptions: SqsSourceOptions,
           .standard()
           .withClientConfiguration(new ClientConfiguration().withMaxConnections(maxConnections))
           .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-          .withRegion(region)
+          .withEndpointConfiguration(endpointConfiguration)
           .build()
       } else {
         // Hardcode use of WebIdentityTokenCredentialsProvider in production.
